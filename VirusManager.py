@@ -4,10 +4,38 @@ import models
 
 class VirusManager:
     def __init__(self, machine_limit = 16):
-        self._reference_machines = []
-        self._managed_machines = []
+        self._reference_machines = {}
+        self._managed_machines = {}
         self._machine_limit = machine_limit
         self._last_machine_action_time = -1
+
+
+    def initialize_from_database(self):
+        references = models.ReferenceMachine.select()
+        for reference in references:
+            self.add_machine_from_database(machine)
+
+        machines = models.ManagedMachine.select()
+        for machine in machines:
+            reference = machine.reference_image.image_name
+            reference = self._reference_machines[reference]
+
+            self.add_machine_from_database(machine, reference)
+
+    def add_machine_from_database(self, record, reference):
+        name = record.image_name
+        machine = ManagedMachine(name, reference, record)
+
+        self._managed_machines[name] = machine
+
+
+    def add_reference_from_database(self, record):
+        image_name = record.image_name
+        system_name = record.system_name
+        reference = ReferenceMachine(image_name,
+            system_name, record)
+
+        self._reference_machines[name] = reference
 
 
     def _get_machine_limit(self):
@@ -46,7 +74,7 @@ class VirusManager:
         pass
 
 
-    def create_new_machine(self):
+    def create_new_machine(self, name, reference):
         pass
 
 
