@@ -2,19 +2,28 @@ import ManagedMachine
 import subprocess
 
 class ReferenceMachine:
-    def __init__(self, image_name, system_name):
+    def __init__(self, image_name, system_name, model):
         # type: (str, str)
         self._image_name = image_name
         self._system_name = system_name
+        self._model = model
+
 
     def _get_image_name(self):
         return self._image_name
 
+
     def _get_system_name(self):
         return self._system_name
 
+
+    def _get_model(self):
+        return self._model
+
     image_name = property(_get_image_name)
     system_name = property(_get_system_name)
+    model = property(_get_model)
+
 
     """
     Takes the ReferenceMachine and clones it to create a
