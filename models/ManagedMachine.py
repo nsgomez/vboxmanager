@@ -4,5 +4,5 @@ import ReferenceMachine
 
 class ManagedMachine(BaseModel):
     image_name = TextField(unique=True)
-    reference_image = ForeignKeyField(ReferenceMachine)
-    system_name = TextField()
+    reference_image = ForeignKeyField(ReferenceMachine,
+        related_name='reference_machine_instances')
