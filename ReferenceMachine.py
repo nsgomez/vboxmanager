@@ -1,4 +1,5 @@
 import ManagedMachine
+import models
 import subprocess
 
 class ReferenceMachine:
@@ -40,4 +41,8 @@ class ReferenceMachine:
             self._image_name, '--mode', 'machine',
             '--name', new_image_name, '--register'])
 
-        return ManagedMachine(new_image_name, self)
+        model = models.ManagedMachine()
+        model.image_name = new_image_name
+        model.reference_image = self._model
+
+        return ManagedMachine(new_image_name, self, model)

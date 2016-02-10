@@ -1,6 +1,7 @@
 import ManagedMachine
 import ReferenceMachine
 import models
+import random
 
 class VirusManager:
     def __init__(self, machine_limit = 16):
@@ -35,7 +36,7 @@ class VirusManager:
         reference = ReferenceMachine(image_name,
             system_name, record)
 
-        self._reference_machines[name] = reference
+        self._reference_machines[image_name] = reference
 
 
     def _get_machine_limit(self):
@@ -75,20 +76,51 @@ class VirusManager:
 
 
     def create_new_machine(self, name, reference):
-        pass
+        machine = reference.clone_as_managed_machine(name)
+        self._managed_machines[name] = machine
 
 
-    def wipe_random_machine(self):
-        pass
+    def destroy_random_machine(self):
+        machine = self.get_random_machine()
+        if machine:
+            self.destroy_machine(machine)
 
 
-    def wipe_machine(self, machine):
-        pass
+    def reset_random_machine(self):
+        machine = self.get_random_machine()
+        if machine:
+            machine = self.reset_machine(machine)
+
+
+    def get_random_machine(self):
+        if self.machine_count < 1:
+            return None
+
+        keys = list(self._managed_machines.keys())
+        key = random.choice(keys)
+        machine = self._managed_machines[key]
+
+        return machine
+
+
+    def destroy_machine(self, machine):
+        if machine:
+            machine.destroy()
+
+
+    def reset_machine(self, machine):
+        if machine:
+            machine = machine.reset_to_reference_state()
+            name = machine.image_name
+
+            self._managed_machines[name] = machine
 
 
     def add_reference_machine(self, reference):
-        pass
+        image_name = reference.image_name
+        self._reference_machines[image_name] = reference
 
 
     def add_existing_machine(self, machine):
-        pass
+        image_name = machine.image_name
+        self._managed_machines[image_name] = machine

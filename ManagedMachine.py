@@ -44,7 +44,7 @@ class ManagedMachine:
     model = property(_get_model)
 
 
-    def start_machine(self):
+    def start(self):
         # type: bool
         if self._is_running or self._is_destroyed:
             return False
@@ -56,7 +56,7 @@ class ManagedMachine:
         return True
 
 
-    def stop_machine(self):
+    def stop(self):
         # type: bool
         if not self._is_running or self._is_destroyed:
             return False
@@ -68,7 +68,7 @@ class ManagedMachine:
         return True
 
 
-    def restart_machine(self):
+    def restart(self):
         # type: bool
         if not self._is_running or self._is_destroyed:
             return False
@@ -79,14 +79,14 @@ class ManagedMachine:
         return True
 
 
-    def take_screenshot(self, filename):
+    def screenshot(self, filename):
         if not self._is_running or self._is_destroyed:
             return False
 
         if not filename:
             filename = str(time.time())
             suffix = str(random.randint(1, 999))
-            filename = filename + suffix)
+            filename = filename + suffix
 
         subprocess.check_output(['VBoxManage', 'controlvm',
             self._image_name, 'screenshot', filename])
@@ -103,7 +103,7 @@ class ManagedMachine:
         return reference.clone_as_managed_machine(name)
 
 
-    def destroy_machine(self):
+    def destroy(self):
         if self._is_destroyed:
             return
 
