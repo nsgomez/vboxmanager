@@ -2,13 +2,31 @@ import ManagedMachine
 import ReferenceMachine
 import models
 import random
+import time
 
 class VirusManager:
-    def __init__(self, machine_limit = 16):
+    # Destroy a machine at random at least once every
+    # four hours.
+    DESTROY_DELAY = (60 * 60 * 4)
+    RESET_DELAY = DESTROY_DELAY
+
+    # Create a machine at random at least once every
+    # three hours.
+    CREATE_DELAY = (60 * 60 * 3)
+
+    # Take screenshots every 30sec.
+    SCREENSHOT_DELAY = 30
+
+    def __init__(self, machine_limit = 8):
+        now = time.time()
+
         self._reference_machines = {}
         self._managed_machines = {}
         self._machine_limit = machine_limit
-        self._last_machine_action_time = -1
+        self._last_create_time = now
+        self._last_destroy_time = now
+        self._last_reset_time = now
+        self._last_screenshot_time = now
 
 
     def initialize_from_database(self):
@@ -22,6 +40,10 @@ class VirusManager:
             reference = self._reference_machines[reference]
 
             self.add_machine_from_database(machine, reference)
+
+            name = machine.image_name
+            machine = self._managed_machines[name]
+            machine.start()
 
     def add_machine_from_database(self, record, reference):
         name = record.image_name
@@ -59,20 +81,94 @@ class VirusManager:
         return self._managed_machines
 
 
-    def _get_last_machine_action_time(self):
-        return self._last_machine_action_time
+    def _get_last_destroy_time(self):
+        return self._last_destroy_time
+
+
+    def _get_last_create_time(self):
+        return self._last_create_time
+
+
+    def _get_last_reset_time(self):
+        return self._last_reset_time
+
+
+    def _get_last_screenshot_time(self):
+        return self._last_screenshot_time
 
     machine_limit = property(_get_machine_limit)
     machine_count = property(_get_machine_count)
     reference_count = property(_get_reference_count)
     managed_machines = property(_get_machines)
     reference_machines = property(_get_references)
-    last_machine_action_time = property(
-        _get_last_machine_action_time)
+    last_destroy_time = property(_get_last_destroy_time)
+    last_create_time = property(_get_last_create_time)
+    last_reset_time = property(_get_last_reset_time)
+    last_screenshot_time = property(
+        _get_last_screenshot_time)
 
 
     def process(self):
-        pass
+        if self.machine_count > self.machine_limit:
+            self.destroy_random_machine()
+
+        now = time.time()
+        time_delta = now - self._last_destroy_time
+
+        # If it's been long enough since a machine was
+        # destroyed, we have a 0.01% chance of destroying
+        # one now.
+        if  time_delta > SELF.DESTROY_DELAY \
+        and random.random() <= 0.0001:
+            self.destroy_random_machine()
+            self._last_destroy_time = now
+
+        time_delta = now - self._last_reset_time
+
+        # Likewise, we have a 0.05% chance of resetting a
+        # random machine now.
+        if  time_delta > SELF.RESET_DELAY \
+        and random.random() <= 0.0005:
+            self.reset_random_machine()
+            self._last_reset_time = now
+
+        time_delta = now - self._last_create_time
+
+        # Likewise, we have a 0.05% chance of creating a
+        # new machine now.
+        if time_delta > SELF_CREATE_DELAY \
+        and random.random() <= 0.0005:
+            reference = self.get_random_reference()
+            index = self.get_free_index()
+            name = self.gen_image_name(index)
+
+            machine = self.create_new_machine(name,
+                reference)
+
+            machine.start()
+
+        time_delta = now - self._last_screenshot_time
+        if time_delta > SCREENSHOT_DELAY:
+            pass
+
+
+    def gen_image_name(self, index):
+        return "Sandbox Image " + str(index)
+
+
+    def get_free_index(self):
+        if self.machine_count >= self.machine_limit:
+            return None
+
+        i = 1
+        while i <= self.machine_limit:
+            key = self.gen_image_name(i)
+            if key not in self._managed_machines:
+                return i
+
+            i = i + 1
+
+        return None
 
 
     def create_new_machine(self, name, reference):
@@ -103,9 +199,23 @@ class VirusManager:
         return machine
 
 
+    def get_random_reference(self):
+        if self.reference_count < 1:
+            return None
+
+        keys = list(self._reference_machines.keys())
+        key = random.choice(keys)
+        reference = self._reference_machines[key]
+
+        return reference
+
+
     def destroy_machine(self, machine):
         if machine:
+            name = machine.image_name
             machine.destroy()
+
+            self._managed_machines.pop(name, None)
 
 
     def reset_machine(self, machine):
