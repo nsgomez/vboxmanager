@@ -29,7 +29,7 @@ def main():
             break
 
 def process(manager, logger):
-    logger.debug('Processing a manager tick')
+    #logger.debug('Processing a manager tick')
     if manager.machine_count > manager.machine_limit:
         manager.destroy_random_machine()
 
@@ -37,10 +37,10 @@ def process(manager, logger):
     time_delta = now - manager.last_destroy_time
 
     # If it's been long enough since a machine was
-    # destroyed, we have a 0.01% chance of destroying
+    # destroyed, we have a 0.1% chance of destroying
     # one now.
     if  time_delta > DESTROY_DELAY \
-    and random.random() <= 0.0001:
+    and random.random() <= 0.001:
         logger.info('Destroying a machine at random...')
         manager.destroy_random_machine()
 
@@ -55,10 +55,10 @@ def process(manager, logger):
 
     time_delta = now - manager.last_create_time
 
-    # Likewise, we have a 0.05% chance of creating a
+    # Likewise, we have a 0.1% chance of creating a
     # new machine now.
     if time_delta > CREATE_DELAY \
-    and random.random() <= 0.0005:
+    and random.random() <= 0.001:
         reference = manager.get_random_reference()
         index = manager.get_free_index()
         name = manager.gen_image_name(index)

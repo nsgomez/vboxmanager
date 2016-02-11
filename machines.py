@@ -176,6 +176,7 @@ class ManagedMachine:
         if self._is_destroyed:
             return
 
+        self.stop_silently()
         self._logger.info('Destroying machine ' +
             self._image_name)
 

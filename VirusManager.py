@@ -1,11 +1,11 @@
 import ConfigManager
 import Logger
-from ManagedMachine import ManagedMachine
-from ReferenceMachine import ReferenceMachine
-
 import models
 import random
 import time
+
+from machines import ManagedMachine
+from machines import ReferenceMachine
 
 class VirusManager:
     def __init__(self, machine_limit = 8):
@@ -29,7 +29,7 @@ class VirusManager:
 
         machines = models.ManagedMachine.select()
         for machine in machines:
-            reference = machine.reference_image.image_name
+            reference = machine.reference_image
             reference = self._reference_machines[reference]
 
             self.add_machine_from_database(machine, reference)
@@ -124,11 +124,13 @@ class VirusManager:
 
     def create_new_machine(self, name, reference):
         self._logger.info('Creating new machine ' + name +
-            'from reference ' + reference.image_name)
+            ' from reference ' + reference.image_name)
 
         machine = reference.clone_as_managed_machine(name)
         self._managed_machines[name] = machine
         self._last_create_time = time.time()
+
+        return machine
 
 
     def destroy_random_machine(self):
