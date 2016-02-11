@@ -1,0 +1,8 @@
+This directory is used by default for storing stateful
+information about the virus manager, particularly
+databases with information about machines managed by
+this project.
+
+This directory is also reserved for any future files
+that rely on saving or managing the state of the
+virus manager.
