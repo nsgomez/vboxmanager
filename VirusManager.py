@@ -1,22 +1,13 @@
-import ManagedMachine
-import ReferenceMachine
+import ConfigManager
+import Logger
 import models
 import random
 import time
 
+from ManagedMachine import ManagedMachine
+from ReferenceMachine import ReferenceMachine
+
 class VirusManager:
-    # Destroy a machine at random at least once every
-    # four hours.
-    DESTROY_DELAY = (60 * 60 * 4)
-    RESET_DELAY = DESTROY_DELAY
-
-    # Create a machine at random at least once every
-    # three hours.
-    CREATE_DELAY = (60 * 60 * 3)
-
-    # Take screenshots every 30sec.
-    SCREENSHOT_DELAY = 30
-
     def __init__(self, machine_limit = 8):
         now = time.time()
 
@@ -27,12 +18,13 @@ class VirusManager:
         self._last_destroy_time = now
         self._last_reset_time = now
         self._last_screenshot_time = now
+        self._logger = Logger.get_logger()
 
 
-    def initialize_from_database(self):
-        references = models.ReferenceMachine.select()
-        for reference in references:
-            self.add_machine_from_database(machine)
+    def initialize(self):
+        config = ConfigManager.get_data()
+        for reference in config.references:
+            self.add_machine_from_yaml(reference)
 
         machines = models.ManagedMachine.select()
         for machine in machines:
@@ -50,16 +42,18 @@ class VirusManager:
         machine = ManagedMachine(name, reference, record)
 
         self._managed_machines[name] = machine
+        self._logger.info('Imported machine ' + name)
 
 
-    def add_reference_from_database(self, record):
+    def add_reference_from_yaml(self, record):
         image_name = record.image_name
         system_name = record.system_name
         reference = ReferenceMachine(image_name,
-            system_name, record)
+            system_name)
 
         self._reference_machines[image_name] = reference
-
+        self._logger.info('Imported reference ' +
+            image_name)
 
     def _get_machine_limit(self):
         return self._machine_limit
@@ -106,51 +100,7 @@ class VirusManager:
     last_reset_time = property(_get_last_reset_time)
     last_screenshot_time = property(
         _get_last_screenshot_time)
-
-
-    def process(self):
-        if self.machine_count > self.machine_limit:
-            self.destroy_random_machine()
-
-        now = time.time()
-        time_delta = now - self._last_destroy_time
-
-        # If it's been long enough since a machine was
-        # destroyed, we have a 0.01% chance of destroying
-        # one now.
-        if  time_delta > SELF.DESTROY_DELAY \
-        and random.random() <= 0.0001:
-            self.destroy_random_machine()
-            self._last_destroy_time = now
-
-        time_delta = now - self._last_reset_time
-
-        # Likewise, we have a 0.05% chance of resetting a
-        # random machine now.
-        if  time_delta > SELF.RESET_DELAY \
-        and random.random() <= 0.0005:
-            self.reset_random_machine()
-            self._last_reset_time = now
-
-        time_delta = now - self._last_create_time
-
-        # Likewise, we have a 0.05% chance of creating a
-        # new machine now.
-        if time_delta > SELF_CREATE_DELAY \
-        and random.random() <= 0.0005:
-            reference = self.get_random_reference()
-            index = self.get_free_index()
-            name = self.gen_image_name(index)
-
-            machine = self.create_new_machine(name,
-                reference)
-
-            machine.start()
-
-        time_delta = now - self._last_screenshot_time
-        if time_delta > SCREENSHOT_DELAY:
-            pass
-
+    
 
     def gen_image_name(self, index):
         return "Sandbox Image " + str(index)
@@ -172,8 +122,12 @@ class VirusManager:
 
 
     def create_new_machine(self, name, reference):
+        self._logger.info('Creating new machine ' + name +
+            'from reference ' + reference.image_name)
+
         machine = reference.clone_as_managed_machine(name)
         self._managed_machines[name] = machine
+        self._last_create_time = time.time()
 
 
     def destroy_random_machine(self):
@@ -216,6 +170,7 @@ class VirusManager:
             machine.destroy()
 
             self._managed_machines.pop(name, None)
+            self._last_destroy_time = time.time()
 
 
     def reset_machine(self, machine):
@@ -224,13 +179,16 @@ class VirusManager:
             name = machine.image_name
 
             self._managed_machines[name] = machine
+            self._last_reset_time = time.time()
 
 
     def add_reference_machine(self, reference):
         image_name = reference.image_name
         self._reference_machines[image_name] = reference
+        self._logger.info('Added reference ' + image_name)
 
 
     def add_existing_machine(self, machine):
         image_name = machine.image_name
         self._managed_machines[image_name] = machine
+        self._logger.info('Added machine ' + image_name)

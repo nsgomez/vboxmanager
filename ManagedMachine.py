@@ -1,4 +1,5 @@
-import ReferenceMachine
+from ReferenceMachine import ReferenceMachine
+import Logging
 import random
 import subprocess
 import time
@@ -11,6 +12,7 @@ class ManagedMachine:
         self._is_running = False
         self._is_destroyed = False
         self._model = model
+        self._logger = Logging.get_logger()
 
 
     def _get_image_name(self):
@@ -49,6 +51,9 @@ class ManagedMachine:
         if self._is_running or self._is_destroyed:
             return False
 
+        self._logger.info('Starting machine ' + 
+            self._image_name)
+
         subprocess.check_output(['VBoxHeadless',
             '--startvm', self._image_name])
 
@@ -61,6 +66,9 @@ class ManagedMachine:
         if not self._is_running or self._is_destroyed:
             return False
 
+        self._logger.info('Stopping machine ' + 
+            self._image_name)
+
         subprocess.check_output(['VBoxManage', 'controlvm',
             self._image_name, 'poweroff'])
 
@@ -72,6 +80,9 @@ class ManagedMachine:
         # type: bool
         if not self._is_running or self._is_destroyed:
             return False
+
+        self._logger.info('Restarting machine ' +
+            self._image_name)
 
         subprocess.check_output(['VBoxManage', 'controlvm',
             self._image_name, 'reset'])
@@ -88,6 +99,9 @@ class ManagedMachine:
             suffix = str(random.randint(1, 999))
             filename = filename + suffix
 
+        self._logger.debug('Screenshotting machine ' +
+            self._image_name)
+
         subprocess.check_output(['VBoxManage', 'controlvm',
             self._image_name, 'screenshot', filename])
 
@@ -96,6 +110,9 @@ class ManagedMachine:
 
     def reset_to_reference_state(self):
         # type: ManagedMachine
+        self._logger.info('Resetting machine ' +
+            self._image_name + ' to reference state')
+
         self.destroy_machine()
 
         reference = self._reference_image
@@ -106,6 +123,9 @@ class ManagedMachine:
     def destroy(self):
         if self._is_destroyed:
             return
+
+        self._logger.info('Destroying machine ' +
+            self._image_name)
 
         subprocess.check_output(['VBoxManage',
             'unregistervm', self._image_name, '--delete'])

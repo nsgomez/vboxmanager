@@ -1,13 +1,12 @@
-import ManagedMachine
+from ManagedMachine import ManagedMachine
 import models
 import subprocess
 
 class ReferenceMachine:
-    def __init__(self, image_name, system_name, model):
+    def __init__(self, image_name, system_name):
         # type: (str, str)
         self._image_name = image_name
         self._system_name = system_name
-        self._model = model
 
 
     def _get_image_name(self):
@@ -17,13 +16,8 @@ class ReferenceMachine:
     def _get_system_name(self):
         return self._system_name
 
-
-    def _get_model(self):
-        return self._model
-
     image_name = property(_get_image_name)
     system_name = property(_get_system_name)
-    model = property(_get_model)
 
 
     """
@@ -43,6 +37,6 @@ class ReferenceMachine:
 
         model = models.ManagedMachine()
         model.image_name = new_image_name
-        model.reference_image = self._model
+        model.reference_image = self._image_name
 
         return ManagedMachine(new_image_name, self, model)
