@@ -147,9 +147,10 @@ class ManagedMachine:
             return False
 
         if not filename:
+            prefix = 'store/screenshots/'
             filename = str(time.time())
             suffix = str(random.randint(1, 999))
-            filename = filename + suffix
+            filename = prefix + filename + suffix
 
         self._logger.debug('Screenshotting machine ' +
             self._image_name)
