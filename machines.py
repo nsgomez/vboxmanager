@@ -148,21 +148,21 @@ class ManagedMachine:
         return True
 
 
-    def screenshot(self, filename):
+    def screenshot(self, filename = None):
         if not self._is_running or self._is_destroyed:
             return False
 
         if not filename:
             prefix = 'store/screenshots/'
             filename = str(time.time())
-            suffix = str(random.randint(1, 999))
+            suffix = str(random.randint(1, 999)) + '.png'
             filename = prefix + filename + suffix
 
         self._logger.debug('Screenshotting machine ' +
             self._image_name)
 
         subprocess.check_output(['VBoxManage', 'controlvm',
-            self._image_name, 'screenshot', filename])
+            self._image_name, 'screenshotpng', filename])
 
         self._last_screenshot = filename
         return filename

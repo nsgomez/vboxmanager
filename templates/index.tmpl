@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>xkcd350: The Virus Aquarium</title>
+	</head>
+
+	<body>
+	{% for key in machines %}
+	<div class="vm">
+		{% set machine = machines.get(key) %}
+		<div class="vm-image">
+		</div>
+		<div class="vm-data">
+			<strong>{{ machine.image_name }}</strong><br />
+			Running {{ machine.system_name }}<br />
+			{{ machine.infections|length }} infections
+		</div>
+	</div>
+	{% endfor %}
+	</body>
+</html>
