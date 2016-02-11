@@ -4,3 +4,39 @@
 	margin: 40px auto;
 	font-family: 'Garamond', 'Georgia', 'serif';
 }
+
+#vm-container {
+	width: 100%;
+	clear: both;
+}
+
+#vm-index-left, #vm-index-right {
+	width: 300px;
+}
+
+#vm-index-left {
+	float: left;
+}
+
+#vm-index-right {
+	float: right;
+}
+
+#footer {
+	margin: 25px auto;
+	text-align: center;
+	font-size: 0.6em;
+}
+
+.vm {
+	margin: 10px;
+}
+
+.vm img {
+	border: 1px solid #000;
+}
+
+#navigation {
+	margin: 20px;
+	text-align: center;
+}

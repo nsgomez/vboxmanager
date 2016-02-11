@@ -1,21 +1,23 @@
 {% extends "base.tmpl" %}
 
 {% block content %}
-<!-- no regrets -->
-<table>
-<tr>
+<div id="vm-container">
 {% for column in machines|slice(2) %}
-<td>
+{% if loop.index == 1 %}
+<div id="vm-index-left">
+{% else %}
+<div id="vm-index-right">
+{% endif %}
 	{% for key in column %}
 	<div class="vm">
 		{% set machine = machines.get(key) %}
 		<div class="vm-image">
 			{% if machine.screenshot_filename %}
 			<img src="{{ url_for('static', filename='screenshots/' + machine.screenshot_filename) }}"
-				alt="Screenshot of {{ machine.image_name }}" width="150" />
+				alt="Screenshot of {{ machine.image_name }}" width="250" />
 			{% else %}
 			<img src="{{ url_for('static', filename='no_screenshot.png') }}"
-				alt="No screenshot available for {{ machine.image_name }}" width="150" />
+				alt="No screenshot available for {{ machine.image_name }}" width="250" />
 			{% endif %}
 		</div>
 		<div class="vm-data">
@@ -25,8 +27,8 @@
 		</div>
 	</div>
 	{% endfor %}
-</td>
+</div>
 {% endfor %}
-</tr>
-</table>
+<div style="clear: both;"></div>
+</div>
 {% endblock %}
