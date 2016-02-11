@@ -1,14 +1,22 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>xkcd350: The Virus Aquarium</title>
-	</head>
+{% extends "base.tmpl" %}
 
-	<body>
-	{% for key in machines %}
+{% block content %}
+<!-- no regrets -->
+<table>
+<tr>
+{% for column in machines|slice(2) %}
+<td>
+	{% for key in column %}
 	<div class="vm">
 		{% set machine = machines.get(key) %}
 		<div class="vm-image">
+			{% if machine.screenshot_filename %}
+			<img src="{{ url_for('static', filename='screenshots/' + machine.screenshot_filename) }}"
+				alt="Screenshot of {{ machine.image_name }}" width="150" />
+			{% else %}
+			<img src="{{ url_for('static', filename='no_screenshot.png') }}"
+				alt="No screenshot available for {{ machine.image_name }}" width="150" />
+			{% endif %}
 		</div>
 		<div class="vm-data">
 			<strong>{{ machine.image_name }}</strong><br />
@@ -17,5 +25,8 @@
 		</div>
 	</div>
 	{% endfor %}
-	</body>
-</html>
+</td>
+{% endfor %}
+</tr>
+</table>
+{% endblock %}

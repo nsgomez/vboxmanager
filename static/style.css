@@ -1,0 +1,6 @@
+/* Pretty much shamelessly adapted from the Flask site's layout */
+#container {
+	width: 640px;
+	margin: 40px auto;
+	font-family: 'Garamond', 'Georgia', 'serif';
+}

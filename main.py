@@ -18,8 +18,9 @@ CREATE_DELAY = (60 * 60 * 3)
 SCREENSHOT_DELAY = 30
 
 def main():
-    manager = VirusManager()
     logger = Logger.get_logger()
+    manager = VirusManager()
+    manager.screenshot_all_machines()
 
     process_updates(manager, logger)
     logger.info('VirusManager now ready for processing')

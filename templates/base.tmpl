@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{%block title %}xkcd350: The Aquarium{% endblock %}</title>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='normalize.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="header">
+			{% block header %}
+				<div id="logo">
+					<a href="/"><img src="{{ url_for('static', filename='logo.png') }}" alt="The AquariVM" /></a>
+				</div>
+				<div id="navigation">
+					<a href="/about">What is this?</a>
+				</div>
+			{% endblock %}
+			</div>
+
+			<div id="content">
+			{% block content %}
+			{% endblock %}
+			</div>
+
+			<div id="footer">
+			{% block footer %}
+			This project is not endorsed by or affiliated with xkcd or Randall Munroe in any way.<br />
+			Made by <a href="http://www.ngomez.me">nsgomez</a>.
+			{% endblock %}
+			</div>
+		</div>
+	</body>
+</html>

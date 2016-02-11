@@ -77,11 +77,14 @@ def update():
     for machine in data:
         image_name = machine['image_name']
         system_name = machine['system_name']
-        screenshot_filename = machine['screenshot_filename']
+        capture_file = machine['screenshot_filename']
         infections = machine['infections']
 
+        if capture_file is not None:
+            capture_file = capture_file.rsplit('/', 1)[-1]
+
         machine = Machine(image_name, system_name,
-            screenshot_filename, infections)
+            capture_file, infections)
 
         machines[image_name] = machine
 
