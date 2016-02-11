@@ -153,7 +153,7 @@ class ManagedMachine:
             return False
 
         if not filename:
-            prefix = 'store/screenshots/'
+            prefix = 'static/screenshots/'
             filename = str(time.time())
             suffix = str(random.randint(1, 999)) + '.png'
             filename = prefix + filename + suffix

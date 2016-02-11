@@ -199,9 +199,9 @@ class VirusManager:
 
     def screenshot_all_machines(self):
         # Delete all old screenshots
-        for f in os.listdir('store/screenshots'):
+        for f in os.listdir('static/screenshots'):
             if f.endswith('.png'):
-                os.remove('store/screenshots/' + f)
+                os.remove('static/screenshots/' + f)
 
         for key in self._managed_machines:
             machine = self._managed_machines[key]
