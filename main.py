@@ -1,8 +1,9 @@
 import ConfigManager
 import Logger
+from VirusManager import VirusManager
+
 import random
 import time
-from VirusManager import VirusManager
 
 # Destroy a random machine at least once every four hours.
 DESTROY_DELAY = (60 * 60 * 4)
@@ -18,6 +19,7 @@ SCREENSHOT_DELAY = 30
 def main():
     manager = VirusManager()
     logger = Logger.get_logger()
+    logger.info('VirusManager now ready for processing')
 
     while True:
         try:
@@ -27,6 +29,7 @@ def main():
             break
 
 def process(manager, logger):
+    logger.debug('Processing a manager tick')
     if manager.machine_count > manager.machine_limit:
         manager.destroy_random_machine()
 
@@ -66,9 +69,9 @@ def process(manager, logger):
 
         machine.start()
 
-    time_delta = now - self._last_screenshot_time
-    if time_delta > SCREENSHOT_DELAY:
-        pass
+#    time_delta = now - self._last_screenshot_time
+#    if time_delta > SCREENSHOT_DELAY:
+#        pass
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,6 @@
-from ReferenceMachine import ReferenceMachine
-import Logging
+import Logger
+import ReferenceMachine
+
 import random
 import subprocess
 import time
@@ -12,7 +13,7 @@ class ManagedMachine:
         self._is_running = False
         self._is_destroyed = False
         self._model = model
-        self._logger = Logging.get_logger()
+        self._logger = Logger.get_logger()
 
 
     def _get_image_name(self):

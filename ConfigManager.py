@@ -10,9 +10,11 @@ config_data = None
 def get_data():
     if config_data is None:
         read_data()
-        return config_data
+
+    return config_data
 
 def read_data():
+    global config_data
     with open('config.yml', 'r') as f:
         config_data = f.read()
         config_data = load(config_data, Loader=Loader)        

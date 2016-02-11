@@ -3,6 +3,7 @@ import sys
 
 logger = None
 def get_logger():
+    global logger
     if logger is None:
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)

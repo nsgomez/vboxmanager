@@ -1,11 +1,11 @@
 import ConfigManager
 import Logger
+from ManagedMachine import ManagedMachine
+from ReferenceMachine import ReferenceMachine
+
 import models
 import random
 import time
-
-from ManagedMachine import ManagedMachine
-from ReferenceMachine import ReferenceMachine
 
 class VirusManager:
     def __init__(self, machine_limit = 8):
@@ -19,12 +19,13 @@ class VirusManager:
         self._last_reset_time = now
         self._last_screenshot_time = now
         self._logger = Logger.get_logger()
+        self.initialize()
 
 
     def initialize(self):
         config = ConfigManager.get_data()
-        for reference in config.references:
-            self.add_machine_from_yaml(reference)
+        for reference in config['references']:
+            self.add_reference_from_yaml(reference)
 
         machines = models.ManagedMachine.select()
         for machine in machines:
@@ -46,8 +47,8 @@ class VirusManager:
 
 
     def add_reference_from_yaml(self, record):
-        image_name = record.image_name
-        system_name = record.system_name
+        image_name = record['image_name']
+        system_name = record['system_name']
         reference = ReferenceMachine(image_name,
             system_name)
 

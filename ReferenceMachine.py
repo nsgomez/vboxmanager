@@ -1,4 +1,4 @@
-from ManagedMachine import ManagedMachine
+import ManagedMachine
 import models
 import subprocess
 

@@ -9,3 +9,5 @@ class BaseModel(Model):
 class ManagedMachine(BaseModel):
     image_name = TextField(unique=True)
     reference_image = TextField()
+
+db.create_tables([ManagedMachine], True)
