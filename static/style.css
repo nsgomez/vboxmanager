@@ -28,8 +28,28 @@
 	font-size: 0.6em;
 }
 
-.vm {
+#vm-container .vm {
 	margin: 10px;
+}
+
+#vm-details .vm-image {
+	width: 320px;
+	float: left;
+}
+
+#vm-details .vm-data {
+	width: 300px;
+	float: right;
+}
+
+#vm-details .machine-title {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+#vm-details .machine-system {
+	font-size: 1em;
+	font-style: italic;
 }
 
 .vm img {

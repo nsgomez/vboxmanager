@@ -89,7 +89,8 @@ def process(manager, logger):
         process_updates(manager, logger)
 
 def process_updates(manager, logger):
-    payload = []
+    payload = {}
+    machines = []
     for key in manager.managed_machines:
         machine = manager.managed_machines[key]
 
@@ -104,7 +105,14 @@ def process_updates(manager, logger):
         machine['screenshot_filename'] = screenshot_filename
         machine['infections'] = infections
 
-        payload.append(machine)
+        machines.append(machine)
+
+    payload['start_time'] = manager.start_time
+    payload['create_time'] = manager.last_create_time
+    payload['destroy_time'] = manager.last_destroy_time
+    payload['reset_time'] = manager.last_reset_time
+
+    payload['machines'] = machines
 
     payload = json.dumps(payload)
     requests.post('http://127.0.0.1:5000/update', payload)

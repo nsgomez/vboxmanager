@@ -11,10 +11,12 @@
 			<div id="header">
 			{% block header %}
 				<div id="logo">
-					<a href="/"><img src="{{ url_for('static', filename='logo.png') }}" alt="The AquariVM" /></a>
+					<a href="{{ url_for('index') }}">
+						<img src="{{ url_for('static', filename='logo.png') }}" alt="The AquariVM" />
+					</a>
 				</div>
 				<div id="navigation">
-					<a href="/about">What is this?</a>
+					<a href="{{ url_for('about') }}">What is this?</a>
 				</div>
 			{% endblock %}
 			</div>

@@ -5,13 +5,23 @@ from flask import request
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
+import datetime
 import json
 import subprocess
 import time
 
 app = Flask(__name__)
 http_server = HTTPServer(WSGIContainer(app))
+
 machines = {}
+class Timestamps:
+    def __init__(self):
+        self.start_time = 0
+        self.create_time = 0
+        self.destroy_time = 0
+        self.reset_time = 0
+
+timestamps = Timestamps()
 
 class Machine:
     def __init__(self, image_name, system_name,
@@ -22,9 +32,23 @@ class Machine:
         self.screenshot_filename = screenshot_filename
         self.infections = infections
 
+@app.template_filter('gen_time')
+def gen_time(timestamp):
+    date = datetime.datetime.fromtimestamp(timestamp)
+    fdate = date.strftime('%Y-%m-%d at %H:%M:%S Eastern Time')
+    return fdate
+
+
 @app.route('/', methods = ['GET'])
 def index():
-    return render_template('index.tmpl', machines=machines)
+    return render_template('index.tmpl', machines=machines,
+        timestamps=timestamps)
+
+
+@app.route('/', methods = ['GET'])
+def about():
+    return render_template('about.tmpl')
+
 
 @app.route('/vmhost/report_infection', methods = ['POST'])
 def report():
@@ -53,6 +77,7 @@ def report():
 
     return 'Success'
 
+
 @app.route('/details/<vmname>', methods = ['GET'])
 def details(vmname):
     if vmname not in machines:
@@ -60,6 +85,7 @@ def details(vmname):
 
     machine = machines[vmname]
     return render_template('details.tmpl', machine=machine)
+
 
 @app.route('/update', methods = ['POST'])
 def update():
@@ -74,7 +100,7 @@ def update():
     data = request.data.decode('utf-8')
     data = json.loads(data)
 
-    for machine in data:
+    for machine in data['machines']:
         image_name = machine['image_name']
         system_name = machine['system_name']
         capture_file = machine['screenshot_filename']
@@ -87,6 +113,12 @@ def update():
             capture_file, infections)
 
         machines[image_name] = machine
+
+    global timestamps
+    timestamps.start_time = data['start_time']
+    timestamps.create_time = data['create_time']
+    timestamps.destroy_time = data['destroy_time']
+    timestamps.reset_time = data['reset_time']
 
     return 'Success'
 

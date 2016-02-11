@@ -12,6 +12,7 @@
 	<div class="vm">
 		{% set machine = machines.get(key) %}
 		<div class="vm-image">
+			<a href="{{ url_for('details', vmname=machine.image_name) }}">
 			{% if machine.screenshot_filename %}
 			<img src="{{ url_for('static', filename='screenshots/' + machine.screenshot_filename) }}"
 				alt="Screenshot of {{ machine.image_name }}" width="250" />
@@ -19,9 +20,10 @@
 			<img src="{{ url_for('static', filename='no_screenshot.png') }}"
 				alt="No screenshot available for {{ machine.image_name }}" width="250" />
 			{% endif %}
+			</a>
 		</div>
 		<div class="vm-data">
-			<strong>{{ machine.image_name }}</strong><br />
+			<a href="{{ url_for('details', vmname=machine.image_name) }}"><strong>{{ machine.image_name }}</strong></a><br />
 			Running {{ machine.system_name }}<br />
 			{{ machine.infections|length }} infections
 		</div>
@@ -30,5 +32,31 @@
 </div>
 {% endfor %}
 <div style="clear: both;"></div>
+</div>
+
+<div id="timestamps">
+<p id="create_time">
+{% if timestamps.create_time == timestamps.start_time %}
+No new virtual machines have been spawned yet.
+{% else %}
+The last virtual machine was created on {{ timestamps.create_time|gen_time }}
+{% endif %}
+</p>
+
+<p id="destroy_time">
+{% if timestamps.destroy_time == timestamps.start_time %}
+No virtual machines have been destroyed yet.
+{% else %}
+The last virtual machine destruction was on {{ timestamps.destroy_time|gen_time }}
+{% endif %}
+</p>
+
+<p id="reset_time">
+{% if timestamps.reset_time == timestamps.start_time %}
+No machines have been reset yet.
+{% else %}
+The last machine reset was on {{ timestamps.reset_time|gen_time }}
+{% endif %}
+</p>
 </div>
 {% endblock %}

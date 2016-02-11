@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>{{ machine.image_name }}</title>
-	</head>
+{% extends "base.tmpl" %}
 
-	<body>
-		TODO
-	</body>
-</html>
+{% block title %}{{ machine.image_name }}{% endblock %}
+{% block content %}
+<div class="vm" id="vm-details">
+	<div class="vm-image centered">
+		{% if machine.screenshot_filename %}
+		{% set screenshot = url_for('static', filename='screenshots/' + machine.screenshot_filename) %}
+		<a href="{{ screenshot }}" target="_blank"><img src="{{ screenshot }}" alt="Screenshot of {{ machine.image_name }}" width="320" /></a>
+		{% else %}
+		<img src="{{ url_for('static', filename='no_screenshot.png') }}"
+			alt="No screenshot available for {{ machine.image_name }}" width="320" />
+		{% endif %}
+		</a>
+	</div>
+	<div class="vm-data">
+		<span class="machine-title">{{ machine.image_name }}</span><br />
+		<span class="machine-system">Running {{ machine.system_name }}</span><br />
+		{{ machine.infections|length }} infections
+		{% if machine.infections|length > -1 %}
+		<ul>
+			{% for infection in infections %}
+			<li>{{ infection }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+	<div style="clear: both;"></div>
+</div>
+{% endblock %}

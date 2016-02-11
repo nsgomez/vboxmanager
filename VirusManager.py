@@ -15,6 +15,7 @@ class VirusManager:
         self._reference_machines = {}
         self._managed_machines = {}
         self._machine_limit = machine_limit
+        self._start_time = now
         self._last_create_time = now
         self._last_destroy_time = now
         self._last_reset_time = now
@@ -61,6 +62,10 @@ class VirusManager:
         return self._machine_limit
 
 
+    def _get_start_time(self):
+        return self._start_time
+
+
     def _get_machine_count(self):
         return len(self._managed_machines)
 
@@ -97,6 +102,7 @@ class VirusManager:
     reference_count = property(_get_reference_count)
     managed_machines = property(_get_machines)
     reference_machines = property(_get_references)
+    start_time = property(_get_start_time)
     last_destroy_time = property(_get_last_destroy_time)
     last_create_time = property(_get_last_create_time)
     last_reset_time = property(_get_last_reset_time)
