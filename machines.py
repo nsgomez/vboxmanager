@@ -54,6 +54,7 @@ class ManagedMachine:
         self._is_destroyed = False
         self._model = model
         self._logger = Logger.get_logger()
+        self._last_screenshot = None
 
 
     def _get_image_name(self):
@@ -76,6 +77,10 @@ class ManagedMachine:
         return self._is_destroyed
 
 
+    def _get_last_screenshot(self):
+        return self._last_screenshot
+
+
     def _get_model(self):
         return self._model
 
@@ -84,6 +89,7 @@ class ManagedMachine:
     system_name = property(_get_reference_system_name)
     is_running = property(_get_is_running)
     is_destroyed = property(_get_is_destroyed)
+    last_screenshot = property(_get_last_screenshot)
     model = property(_get_model)
 
 
@@ -158,6 +164,7 @@ class ManagedMachine:
         subprocess.check_output(['VBoxManage', 'controlvm',
             self._image_name, 'screenshot', filename])
 
+        self._last_screenshot = filename
         return filename
 
 

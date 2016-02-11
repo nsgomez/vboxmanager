@@ -69,9 +69,10 @@ def process(manager, logger):
 
         machine.start()
 
-#    time_delta = now - self._last_screenshot_time
-#    if time_delta > SCREENSHOT_DELAY:
-#        pass
+    time_delta = now - manager.last_screenshot_time
+    if time_delta > SCREENSHOT_DELAY:
+        logger.info('Screenshotting all machines...')
+        manager.screenshot_all_machines()
 
 if __name__ == '__main__':
     main()

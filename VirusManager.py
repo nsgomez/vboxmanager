@@ -1,6 +1,7 @@
 import ConfigManager
 import Logger
 import models
+import os
 import random
 import time
 
@@ -195,3 +196,14 @@ class VirusManager:
         image_name = machine.image_name
         self._managed_machines[image_name] = machine
         self._logger.info('Added machine ' + image_name)
+
+    def screenshot_all_machines(self):
+        # Delete all old screenshots
+        for f in os.listdir('store/screenshots'):
+            if f.endswith('.png'):
+                os.remove(f)
+
+        for name, machine in self._managed_machines:
+            machine.screenshot()
+
+        self._last_screenshot_time = time.time()
