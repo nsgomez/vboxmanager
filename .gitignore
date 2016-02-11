@@ -63,3 +63,6 @@ target/
 
 #Vim lockfiles
 *.swp
+
+#Project files
+config.yml

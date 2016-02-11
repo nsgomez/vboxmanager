@@ -1,0 +1,6 @@
+references:
+        - image_name: Windows 2000 Reference Image
+          system_name: Windows 2000
+
+        - image_name: Windows XP Reference Image
+          system_name: Windows XP
