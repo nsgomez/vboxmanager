@@ -231,5 +231,9 @@ class ManagedMachine:
         subprocess.check_output(['VBoxManage',
             'unregistervm', self._image_name, '--delete'])
 
+        query = models.Infection.delete().where(
+            models.Infection.machine == self._model)
+        query.execute()
+
         self._model.delete_instance()
         self._is_destroyed = True
