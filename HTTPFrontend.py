@@ -74,19 +74,29 @@ def report():
         abort(403)
 
     target = None
-    for machine in machines:
+    for key in machines:
+        machine = machines[key]
         image_name = machine.image_name
+
         proc = subprocess.Popen(['VBoxManage',
             'guestproperty', 'enumerate', image_name],
             stdout=subprocess.PIPE)
 
-        data = proc.stdout.read()
+        data = proc.stdout.read().decode('utf-8')
         if source_ip in data:
             target = machine
             break
 
     if target is None:
         abort(500)
+
+    model = None
+    try:
+        image_name = target.image_name
+        model = models.ManagedMachine.get(
+            models.ManagedMachine.image_name == image_name)
+    except peewee.DoesNotExist:
+        return ''
 
     infection_name = request.form['infection']
     if infection_name not in target.infections:

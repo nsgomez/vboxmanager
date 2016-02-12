@@ -108,6 +108,12 @@ class ManagedMachine:
     creation_time = property(_get_creation_time)
 
 
+    def reload_infections(self):
+        infections = self._model.infections
+        for infection in infections:
+            self.add_infection(infection)
+
+
     def add_infection(self, infection_name):
         if infection_name not in self._infections:
             self._infections.append(infection_name)

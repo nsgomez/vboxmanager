@@ -21,9 +21,9 @@
 		<span class="machine-title">{{ machine.image_name }}</span><br />
 		<span class="machine-system">Running {{ machine.system_name }}</span><br />
 		{{ machine.infections|length }} infections
-		{% if machine.infections|length > -1 %}
+		{% if machine.infections|length > 0 %}
 		<ul>
-			{% for infection in infections %}
+			{% for infection in machine.infections %}
 			<li>{{ infection }}</li>
 			{% endfor %}
 		</ul>

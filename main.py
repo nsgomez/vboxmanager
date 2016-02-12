@@ -95,6 +95,7 @@ def process_updates(manager, logger):
     machines = []
     for key in manager.managed_machines:
         machine = manager.managed_machines[key]
+        machine.reload_infections()
 
         image_name = machine.image_name
         system_name = machine.system_name
@@ -106,8 +107,10 @@ def process_updates(manager, logger):
         machine['image_name'] = image_name
         machine['system_name'] = system_name
         machine['screenshot_filename'] = screenshot_filename
-        machine['infections'] = infections
         machine['creation_time'] = creation_time
+        machine['infections'] = []
+        for infection in infections:
+            machine['infections'].append(infection.name)
 
         machines.append(machine)
 
