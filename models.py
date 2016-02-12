@@ -12,6 +12,7 @@ class BaseModel(Model):
 class ManagedMachine(BaseModel):
     image_name = TextField(unique=True)
     reference_image = TextField()
+    creation_time = IntegerField()
 
 
 class Infection(BaseModel):

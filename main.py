@@ -100,12 +100,14 @@ def process_updates(manager, logger):
         system_name = machine.system_name
         screenshot_filename = machine.last_screenshot
         infections = machine.infections
+        creation_time = machine.creation_time
 
         machine = {}
         machine['image_name'] = image_name
         machine['system_name'] = system_name
         machine['screenshot_filename'] = screenshot_filename
         machine['infections'] = infections
+        machine['creation_time'] = creation_time
 
         machines.append(machine)
 

@@ -42,6 +42,7 @@ class ReferenceMachine:
         model = models.ManagedMachine()
         model.image_name = new_image_name
         model.reference_image = self._image_name
+        model.creation_time = time.time()
         model.save()
 
         return ManagedMachine(new_image_name, self, model)
@@ -92,6 +93,10 @@ class ManagedMachine:
         return self._infections
 
 
+    def _get_creation_time(self):
+        return self._model.creation_time
+
+
     image_name = property(_get_image_name)
     reference_image = property(_get_reference_image)
     system_name = property(_get_reference_system_name)
@@ -100,6 +105,7 @@ class ManagedMachine:
     last_screenshot = property(_get_last_screenshot)
     model = property(_get_model)
     infections = property(_get_infections)
+    creation_time = property(_get_creation_time)
 
 
     def add_infection(self, infection_name):

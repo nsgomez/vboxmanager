@@ -29,12 +29,13 @@ trusted_proxies = {'127.0.0.1', '192.168.56.1'}
 
 class Machine:
     def __init__(self, image_name, system_name,
-        screenshot_filename, infections):
+        screenshot_filename, infections, creation_time):
         self.creation_time = time.time()
         self.image_name = image_name
         self.system_name = system_name
         self.screenshot_filename = screenshot_filename
         self.infections = infections
+        self.creation_time = creation_time
 
 @app.template_filter('gen_time')
 def gen_time(timestamp):
@@ -129,12 +130,13 @@ def update():
         system_name = machine['system_name']
         capture_file = machine['screenshot_filename']
         infections = machine['infections']
+        creation_time = machine['creation_time']
 
         if capture_file is not None:
             capture_file = capture_file.rsplit('/', 1)[-1]
 
         machine = Machine(image_name, system_name,
-            capture_file, infections)
+            capture_file, infections, creation_time)
 
         machines[image_name] = machine
 
