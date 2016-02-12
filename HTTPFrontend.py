@@ -7,6 +7,7 @@ from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
 import datetime
 import json
+import os
 import subprocess
 import time
 
@@ -39,13 +40,20 @@ def gen_time(timestamp):
     return fdate
 
 
+@app.template_filter('small')
+def small(filename):
+    filename = os.path.splitext(filename)[0]
+    filename = filename + '_small.png'
+    return filename
+
+
 @app.route('/', methods = ['GET'])
 def index():
     return render_template('index.tmpl', machines=machines,
         timestamps=timestamps)
 
 
-@app.route('/', methods = ['GET'])
+@app.route('/about', methods = ['GET'])
 def about():
     return render_template('about.tmpl')
 

@@ -1,5 +1,7 @@
+from PIL import Image
 import Logger
 import models
+import os
 import random
 import subprocess
 import time
@@ -163,6 +165,20 @@ class ManagedMachine:
 
         subprocess.check_output(['VBoxManage', 'controlvm',
             self._image_name, 'screenshotpng', filename])
+
+        im = Image.open(filename)
+        w, h = im.size
+
+        factor = 350 / w
+        w = int(w * factor)
+        h = int(h * factor)
+
+        dimensions = (w, h)
+        new_im = im.resize(dimensions)
+
+        small_filename = os.path.splitext(filename)[0]
+        small_filename = small_filename + '_small.png'
+        new_im.save(small_filename)
 
         self._last_screenshot = filename
         return filename

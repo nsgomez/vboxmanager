@@ -6,7 +6,11 @@
 	<div class="vm-image centered">
 		{% if machine.screenshot_filename %}
 		{% set screenshot = url_for('static', filename='screenshots/' + machine.screenshot_filename) %}
-		<a href="{{ screenshot }}" target="_blank"><img src="{{ screenshot }}" alt="Screenshot of {{ machine.image_name }}" width="320" /></a>
+
+                {% set small_filename = machine.screenshot_filename|small %}
+		{% set small_screenshot = url_for('static', filename='screenshots/' + small_filename) %}
+
+		<a href="{{ screenshot }}" target="_blank"><img src="{{ small_screenshot }}" alt="Screenshot of {{ machine.image_name }}" width="320" /></a>
 		{% else %}
 		<img src="{{ url_for('static', filename='no_screenshot.png') }}"
 			alt="No screenshot available for {{ machine.image_name }}" width="320" />

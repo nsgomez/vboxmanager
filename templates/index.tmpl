@@ -14,7 +14,8 @@
 		<div class="vm-image">
 			<a href="{{ url_for('details', vmname=machine.image_name) }}">
 			{% if machine.screenshot_filename %}
-			<img src="{{ url_for('static', filename='screenshots/' + machine.screenshot_filename) }}"
+                        {% set filename = machine.screenshot_filename|small %}
+			<img src="{{ url_for('static', filename='screenshots/' + filename) }}"
 				alt="Screenshot of {{ machine.image_name }}" width="250" />
 			{% else %}
 			<img src="{{ url_for('static', filename='no_screenshot.png') }}"

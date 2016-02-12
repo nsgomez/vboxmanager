@@ -1,0 +1,48 @@
+{% extends "base.tmpl" %}
+
+{% block title %}About the Aquarivm{% endblock %}
+{% block content %}
+<div>
+	<h2>What is this?</h2>
+	<p>This is an implementation of <a href="https://xkcd.com/350/">xkcd 350: Network</a>. The basic premise is
+	that there's a network of unpatched virtual computers connected to the Internet to see how viruses spread
+	through the network.</p>
+</div>
+
+<div>
+	<h2>How is this?</h2>
+	<p>For this project, all computers have two network connections each. One is connected directly to the
+	Internet, and the other is connected to a private network that only the virtual machines can communicate
+	on. The public connection is throttled to 128Kbit/s outbound while the virtual network is unthrottled.</p>
+
+	<p>One of the most challenging design challenges was whether to allow a direct connection to the Internet
+	or not. Ultimately, I decided to allow Internet connections with limited bandwidth in order to allow
+	for network-based infections like Blaster and Welchia to have a chance to spread. Otherwise, there
+	wouldn't really be a point in leaving the systems unpatched either.</p>
+
+	<p>There are two reference images, one for an OEM copy of Windows XP and one for an OEM copy of Windows
+	2000. These are configured to my liking and then cloned using the VirtualBox command line interface.
+	A Python backend interacts with the <tt>VBoxManage</tt> CLI to query and manage the machines themselves.</p>
+
+	<p>In order to detect infections, each machine has a copy of Avast Antivirus 4.1 installed, configured to
+	never actually remove infections, but still logging them as they come up. A Python script on each virtual
+	machine runs as a service, polling for changes to this logfile, and then reporting them to the host,
+	which keeps track of infections.</p>
+
+	<p>The VM manager will wait at least three hours before deciding whether or not to create a new machine
+	instance. After that, there's a 0.1% chance of a new machine being created from a randomly selected
+	reference image.</p>
+
+	<p>Likewise, the manager will wait at least four hours before deciding whether to reset or destroy a 
+	machine, after which there's a 0.05% chance every second.</p>
+
+	<p>There's some source code on my <a href="https://www.github.com/nsgomez/vboxmanager">GitHub</a> but
+	it's digsusting.</p>
+</div>
+
+<div>
+	<h2>Who is this?</h2>
+	<p>This was baked at 350&#8457 and left to cool by <a href="http://www.columbia.edu/~ng2573/">Nelson Gomez</a>,
+	a prospective computer science major and current freshman at Columbia University.</p>
+</div>
+{% endblock %}
