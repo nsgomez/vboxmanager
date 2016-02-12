@@ -32,6 +32,7 @@ def main():
         except KeyboardInterrupt:
             break
 
+
 def process(manager, logger):
     updates_pending = False
 
@@ -88,6 +89,7 @@ def process(manager, logger):
     if updates_pending:
         process_updates(manager, logger)
 
+
 def process_updates(manager, logger):
     payload = {}
     machines = []
@@ -97,7 +99,7 @@ def process_updates(manager, logger):
         image_name = machine.image_name
         system_name = machine.system_name
         screenshot_filename = machine.last_screenshot
-        infections = []
+        infections = machine.infections
 
         machine = {}
         machine['image_name'] = image_name
@@ -116,6 +118,7 @@ def process_updates(manager, logger):
 
     payload = json.dumps(payload)
     requests.post('http://127.0.0.1:5000/update', payload)
+
 
 if __name__ == '__main__':
     main()

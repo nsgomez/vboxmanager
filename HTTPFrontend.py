@@ -7,6 +7,8 @@ from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
 import datetime
 import json
+import models
+import peewee
 import os
 import subprocess
 import time
@@ -23,6 +25,7 @@ class Timestamps:
         self.reset_time = 0
 
 timestamps = Timestamps()
+trusted_proxies = {'127.0.0.1', '192.168.56.1'}
 
 class Machine:
     def __init__(self, image_name, system_name,
@@ -60,7 +63,12 @@ def about():
 
 @app.route('/vmhost/report_infection', methods = ['POST'])
 def report():
-    source_ip = request.remote_addr
+    # http://stackoverflow.com/a/22936947
+    route = request.access_route + [request.remote_addr]
+    source_ip = next((addr for addr in reversed(route)
+                        if addr not in trusted_proxies),
+                        request.remote_addr)
+
     if source_ip.startswith('192.168.') is False:
         abort(403)
 
@@ -81,7 +89,15 @@ def report():
 
     infection_name = request.form['infection']
     if infection_name not in target.infections:
+        infection = models.Infection()
+        infection.name = infection_name
+        infection.machine = model
+        infection.save()
+
         target.infections.append(infection_name)
+
+    print(machine.image_name + ' reported an infection: ' + 
+        infection_name)
 
     return 'Success'
 

@@ -57,6 +57,7 @@ class ManagedMachine:
         self._model = model
         self._logger = Logger.get_logger()
         self._last_screenshot = None
+        self._infections = []
 
 
     def _get_image_name(self):
@@ -86,6 +87,11 @@ class ManagedMachine:
     def _get_model(self):
         return self._model
 
+
+    def _get_infections(self):
+        return self._infections
+
+
     image_name = property(_get_image_name)
     reference_image = property(_get_reference_image)
     system_name = property(_get_reference_system_name)
@@ -93,6 +99,12 @@ class ManagedMachine:
     is_destroyed = property(_get_is_destroyed)
     last_screenshot = property(_get_last_screenshot)
     model = property(_get_model)
+    infections = property(_get_infections)
+
+
+    def add_infection(self, infection_name):
+        if infection_name not in self._infections:
+            self._infections.append(infection_name)
 
 
     def stop_silently(self):

@@ -47,6 +47,10 @@ class VirusManager:
         self._managed_machines[name] = machine
         self._logger.info('Imported machine ' + name)
 
+        infections = record.infections
+        for infection in infections:
+            machine.add_infection(infection)
+
 
     def add_reference_from_yaml(self, record):
         image_name = record['image_name']
