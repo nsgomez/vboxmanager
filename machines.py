@@ -216,8 +216,10 @@ class ManagedMachine:
         reference = self._reference_image
         name = self._image_name
 
-        self.destroy_machine()
-        return reference.clone_as_managed_machine(name)
+        self.destroy()
+        machine = reference.clone_as_managed_machine(name)
+        machine.start()
+        return machine
 
 
     def destroy(self):
